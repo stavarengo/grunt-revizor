@@ -27,6 +27,7 @@ module.exports = function(grunt) {
       nameSuffix: '__',
       flatten: true,
       nonCssFileSelectors: [],
+      logFilesName: true,
       reportNotMinifiedSelectors: false,
       compressFilePrefix: '-min'
     });
@@ -73,6 +74,11 @@ module.exports = function(grunt) {
       var newFileData = compressFile(filepath);
       saveCompressedFile(newFileData, filepath);
     });
+    
+    if (options.reportNotMinifiedSelectors) {
+      console.info("Selectors not minified: ");
+      console.info(notFound);
+    }
 
 
 
@@ -115,11 +121,10 @@ module.exports = function(grunt) {
         namePattern;
 
       fileData = grunt.file.read(filepath);
-      namePattern = new RegExp('[A-Za-z0-9_-]+' + options.nameSuffix, 'g');
+      namePattern    = new RegExp('[A-Za-z0-9\\/_-]+' + options.nameSuffix, 'g');
       newFileData = fileData.replace(namePattern, function (name) {
-        if (options.reportNotMinifiedSelectors && !compressedNames[name] && !notFound[name]) {
+        if (!compressedNames[name] && !notFound[name]) {
           notFound[name] = true;
-          console.log("Selector not minified: " + name);
         }
         return compressedNames[name] ? compressedNames[name] : name;
       });
@@ -163,7 +168,9 @@ module.exports = function(grunt) {
         newFilepath = fileDir + newFileName;
       }
       grunt.file.write(newFilepath, newFileData);
-      grunt.log.writeln('File "' + newFilepath + '" created.');
+      if (options.logFilesName) {
+        grunt.log.writeln('File "' + newFilepath + '" created.');
+      }
     }
 
   });

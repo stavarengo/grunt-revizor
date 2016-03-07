@@ -52,6 +52,8 @@ You can also use this option to minify string that are not CSS classes selectors
 You don't need to add the dot nor the # in the begin of the strings in this array, nor you need to add the `options.nameSuffix`
 in it. The grunt-revizor is smart enough to add it for you automatically.
 
+PS: Do not use a non-valid CSS class character in these strings.
+
 ```js
 grunt.initConfig({
   revizor: {
@@ -87,6 +89,13 @@ grunt.initConfig({
   },
 });
 ```
+
+#### options.nonCssFileSelectors
+Type: `Boolean`
+Default value: true
+
+Set `false` if you don't want to see the name of the modified file names.
+
 
 #### options.flatten
 Type: `Boolean`
